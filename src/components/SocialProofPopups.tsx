@@ -169,19 +169,52 @@ export default function SocialProofPopups() {
   }
 
   const getRandomPosition = () => {
-    // Garantir que o popup não fique muito perto das bordas
-    const minMargin = 20
-    // Evitar área inferior onde fica o floating CTA (últimos 120px)
-    const maxTop = window.innerHeight - 200
-    const maxLeft = window.innerWidth - 320
-
-    // Evitar área superior (primeiros 100px) e área inferior
-    const minTop = 100
+    const popupWidth = 320
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    
+    // Margens maiores para evitar sobrepor conteúdo
+    const marginX = 30
+    
+    // Evitar área superior (header) e inferior (floating CTA)
+    const minTop = 120
+    const maxTop = viewportHeight - 180 // Evitar área do floating CTA
+    
+    // Priorizar margens laterais - dividir em 3 zonas: esquerda, centro (evitar), direita
+    const centerZoneStart = marginX + 150
+    const centerZoneEnd = viewportWidth - marginX - 150
+    const rightZone = viewportWidth - marginX - popupWidth
+    
+    // 70% de chance de aparecer nas margens, 30% no centro (mas evitando)
+    const useMargins = Math.random() > 0.3
+    
+    let left: number
+    
+    if (useMargins) {
+      // Aparecer nas margens (esquerda ou direita)
+      if (Math.random() > 0.5) {
+        // Margem esquerda
+        left = marginX + Math.random() * 100
+      } else {
+        // Margem direita
+        left = rightZone - Math.random() * 100
+      }
+    } else {
+      // Centro, mas com margem de segurança
+      const centerLeft = centerZoneStart + Math.random() * (centerZoneEnd - centerZoneStart - popupWidth)
+      left = Math.max(centerZoneStart, Math.min(centerLeft, centerZoneEnd - popupWidth))
+    }
+    
+    // Garantir que não ultrapasse as bordas
+    left = Math.max(marginX, Math.min(left, viewportWidth - popupWidth - marginX))
+    
+    // Posição vertical aleatória, evitando topo e base
     const availableHeight = maxTop - minTop
-
+    const top = minTop + Math.random() * availableHeight
+    
     return {
-      top: minTop + Math.random() * availableHeight,
-      left: Math.max(minMargin, Math.random() * maxLeft),
+      top,
+      left,
     }
   }
 
@@ -235,7 +268,7 @@ export default function SocialProofPopups() {
   const visiblePopups = popups.filter((p) => p.visible).slice(0, 3)
 
   return (
-    <div className="social-proof-popups">
+    <div className="social-proof-popups" aria-live="polite" aria-atomic="false">
       {visiblePopups.map((popup) => (
         <div
           key={popup.id}
@@ -244,8 +277,10 @@ export default function SocialProofPopups() {
             top: `${popup.top}px`,
             left: `${popup.left}px`,
           }}
+          role="status"
+          aria-label={`${popup.name} acabou de comprar o curso`}
         >
-          <div className="social-proof-popup__icon">✓</div>
+          <div className="social-proof-popup__icon" aria-hidden="true">✓</div>
           <div className="social-proof-popup__content">
             <strong>{popup.name}</strong> acabou de comprar o curso
           </div>

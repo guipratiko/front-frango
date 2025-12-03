@@ -1,6 +1,7 @@
 import Hero from './components/Hero'
 import ValueGrid from './components/ValueGrid'
 import Steps from './components/Steps'
+import LeadForm from './components/LeadForm'
 import Plans from './components/Plans'
 import VideoTestimonials from './components/VideoTestimonials'
 import Testimonials from './components/Testimonials'
@@ -15,6 +16,7 @@ function App() {
       <ValueGrid />
       <Steps />
       <Plans />
+      <LeadForm />
       <VideoTestimonials />
       <Testimonials />
       <Faq />

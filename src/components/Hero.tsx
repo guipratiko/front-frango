@@ -1,4 +1,3 @@
-import { WHATSAPP_URL } from '../constants/links'
 import bannerImg from '/banner.png'
 
 const stats = [
@@ -79,6 +78,37 @@ const CheckIcon = () => (
 )
 
 export default function Hero() {
+  const scrollToPlans = () => {
+    // Procura primeiro pelos botões de compra específicos
+    const botoesCompra = document.getElementById('botoes-compra')
+    if (botoesCompra) {
+      const elementRect = botoesCompra.getBoundingClientRect()
+      const absoluteElementTop = elementRect.top + window.pageYOffset
+      const middle = absoluteElementTop - window.innerHeight / 2 + elementRect.height / 2
+      window.scrollTo({
+        top: middle,
+        behavior: 'smooth',
+      })
+      return
+    }
+    // Fallback para a seção de planos se os botões não forem encontrados
+    const planosSection = document.getElementById('planos')
+    if (planosSection) {
+      const elementRect = planosSection.getBoundingClientRect()
+      const absoluteElementTop = elementRect.top + window.pageYOffset
+      const middle = absoluteElementTop - window.innerHeight / 2 + elementRect.height / 2
+      window.scrollTo({
+        top: middle,
+        behavior: 'smooth',
+      })
+    }
+  }
+
+  const handleCTAClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    scrollToPlans()
+  }
+
   return (
     <header className="hero" id="inicio">
       <div className="hero__banner-wrapper">
@@ -99,15 +129,13 @@ export default function Hero() {
             empreendedores!
           </p>
           <div className="hero__actions">
-            <a
+            <button
               className="btn btn--primary"
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noreferrer"
+              onClick={handleCTAClick}
             >
               QUERO TRANSFORMAR MINHA RENDA AGORA
               <ArrowIcon />
-            </a>
+            </button>
           </div>
           <div className="hero__stats">
             {stats.map((item) => (
@@ -129,11 +157,12 @@ export default function Hero() {
                 width="100%"
                 height="100%"
                 src="https://www.youtube.com/embed/QSYeEKxzBu8?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0&loop=1&playlist=QSYeEKxzBu8&iv_load_policy=3&disablekb=1&cc_load_policy=0"
-                title="YouTube video player"
+                title="Vídeo de apresentação do curso Frango Atropelado"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 className="hero__video"
+                loading="lazy"
               />
               <div className="hero__video-title-blocker"></div>
             </div>

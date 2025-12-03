@@ -48,7 +48,7 @@ export default function Plans() {
           </ul>
         </div>
 
-        <div className="offer-buttons">
+        <div className="offer-buttons" id="botoes-compra">
           <a
             className="btn btn--primary offer-cta"
             href={HOTMART_PLANO_BASICO}
@@ -58,7 +58,7 @@ export default function Plans() {
             COMPRAR POR R$ 97,00
           </a>
           <a
-            className="btn btn--primary offer-cta offer-cta--featured"
+            className="btn btn--primary offer-cta"
             href={HOTMART_PLANO_PROFISSIONAL}
             target="_blank"
             rel="noreferrer"

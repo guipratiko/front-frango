@@ -66,6 +66,7 @@ export default function VideoTestimonials() {
                   loop
                   playsInline
                   className="video-testimonial"
+                  aria-label={`Depoimento de ${testimonial.name}`}
                 />
                 <div className="video-testimonial-overlay">
                   <p className="video-testimonial-name">{testimonial.name}</p>
@@ -90,6 +91,7 @@ export default function VideoTestimonials() {
                   loop
                   playsInline
                   className="video-testimonial"
+                  aria-label={`Depoimento de ${testimonial.name}`}
                 />
                 <div className="video-testimonial-overlay">
                   <p className="video-testimonial-name">{testimonial.name}</p>
