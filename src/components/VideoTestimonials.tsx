@@ -1,22 +1,42 @@
 import { useRef } from 'react'
 
 const testimonials = [
-  { name: 'Carol', video: '/depo/DEPOIMENTO CAROL .mp4' },
-  { name: 'Cintia', video: '/depo/DEPOIMENTO CINTIA .mp4' },
-  { name: 'Cristiane', video: '/depo/DEPOIMENTO CRISTIANE.mp4' },
-  { name: 'Diovana', video: '/depo/DEPOIMENTO DIOVANA.mp4' },
-  { name: 'Elizangela', video: '/depo/Depoimento Elizangela.mp4' },
-  { name: 'Humberto', video: '/depo/DEPOIMENTO HUMBERTO.mp4' },
-  { name: 'Michele', video: '/depo/DEPOIMENTO MICHELE.mp4' },
+  { name: 'Depoimento 1', videoId: 'CCVlAbIU-Po' },
+  { name: 'Depoimento 2', videoId: 'auZVcqNrCoI' },
+  { name: 'Depoimento 3', videoId: 'XDQQeOwhoSk' },
+  { name: 'Depoimento 4', videoId: 'R7qeGsklZBw' },
+  { name: 'Depoimento 5', videoId: '1L_-T1LTd1s' },
+  { name: 'Depoimento 6', videoId: 'l98PgdCeLew' },
+  { name: 'Depoimento 7', videoId: 'pKhanqE3FqQ' },
+  { name: 'Depoimento 8', videoId: 'mZysisBl4xs' },
+  { name: 'Depoimento 9', videoId: 'ZdBe-Zx-OCA' },
 ]
 
 export default function VideoTestimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
 
+  const origin =
+    typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''
+
+  const sendPlayerCommand = (
+    iframe: HTMLIFrameElement,
+    command: 'unMute' | 'mute' | 'playVideo'
+  ) => {
+    iframe.contentWindow?.postMessage(
+      JSON.stringify({
+        event: 'command',
+        func: command,
+        args: [],
+      }),
+      '*'
+    )
+  }
+
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    const video = e.currentTarget.querySelector('video')
-    if (video) {
-      video.muted = false
+    const iframe = e.currentTarget.querySelector('iframe')
+    if (iframe && iframe.contentWindow) {
+      sendPlayerCommand(iframe, 'playVideo')
+      sendPlayerCommand(iframe, 'unMute')
     }
     if (containerRef.current) {
       containerRef.current.style.animationPlayState = 'paused'
@@ -25,13 +45,21 @@ export default function VideoTestimonials() {
   }
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    const video = e.currentTarget.querySelector('video')
-    if (video) {
-      video.muted = true
+    const iframe = e.currentTarget.querySelector('iframe')
+    if (iframe && iframe.contentWindow) {
+      sendPlayerCommand(iframe, 'mute')
     }
     if (containerRef.current) {
       containerRef.current.style.animationPlayState = 'running'
       containerRef.current.style.webkitAnimationPlayState = 'running'
+    }
+  }
+
+  const handleActivate = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    const iframe = e.currentTarget.querySelector('iframe')
+    if (iframe && iframe.contentWindow) {
+      sendPlayerCommand(iframe, 'playVideo')
+      sendPlayerCommand(iframe, 'unMute')
     }
   }
 
@@ -52,56 +80,73 @@ export default function VideoTestimonials() {
         >
           {/* Primeira cópia dos vídeos */}
           <div className="video-testimonials-track">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={`first-${index}`}
-                className="video-testimonial-item"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <video
-                  src={testimonial.video}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="video-testimonial"
-                  aria-label={`Depoimento de ${testimonial.name}`}
-                />
-                <div className="video-testimonial-overlay">
-                  <p className="video-testimonial-name">{testimonial.name}</p>
+            {testimonials.map((testimonial, index) => {
+              const iframeId = `testimonial-first-${index}`
+              const src = `https://www.youtube.com/embed/${testimonial.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${testimonial.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1${
+                origin ? `&origin=${origin}` : ''
+              }`
+
+              return (
+                <div
+                  key={`first-${index}`}
+                  className="video-testimonial-item"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleActivate}
+                  onTouchStart={handleActivate}
+                >
+                  <iframe
+                    id={iframeId}
+                    className="video-testimonial-youtube"
+                    src={src}
+                    title={`Depoimento de ${testimonial.name}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  <div className="video-testimonial-overlay">
+                    <p className="video-testimonial-name">{testimonial.name}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           {/* Segunda cópia para loop infinito */}
           <div className="video-testimonials-track" aria-hidden="true">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={`second-${index}`}
-                className="video-testimonial-item"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <video
-                  src={testimonial.video}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="video-testimonial"
-                  aria-label={`Depoimento de ${testimonial.name}`}
-                />
-                <div className="video-testimonial-overlay">
-                  <p className="video-testimonial-name">{testimonial.name}</p>
+            {testimonials.map((testimonial, index) => {
+              const iframeId = `testimonial-second-${index}`
+              const src = `https://www.youtube.com/embed/${testimonial.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${testimonial.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1${
+                origin ? `&origin=${origin}` : ''
+              }`
+
+              return (
+                <div
+                  key={`second-${index}`}
+                  className="video-testimonial-item"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  onClick={handleActivate}
+                  onTouchStart={handleActivate}
+                >
+                  <iframe
+                    id={iframeId}
+                    className="video-testimonial-youtube"
+                    src={src}
+                    title={`Depoimento de ${testimonial.name}`}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  <div className="video-testimonial-overlay">
+                    <p className="video-testimonial-name">{testimonial.name}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>
     </section>
   )
 }
-
