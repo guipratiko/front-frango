@@ -4,12 +4,10 @@ const testimonials = [
   { name: 'Carol', video: '/depo/DEPOIMENTO CAROL .mp4' },
   { name: 'Cintia', video: '/depo/DEPOIMENTO CINTIA .mp4' },
   { name: 'Cristiane', video: '/depo/DEPOIMENTO CRISTIANE.mp4' },
-  { name: 'Darlan', video: '/depo/DEPOIMENTO DARLAN .mp4' },
   { name: 'Diovana', video: '/depo/DEPOIMENTO DIOVANA.mp4' },
   { name: 'Elizangela', video: '/depo/Depoimento Elizangela.mp4' },
   { name: 'Humberto', video: '/depo/DEPOIMENTO HUMBERTO.mp4' },
   { name: 'Michele', video: '/depo/DEPOIMENTO MICHELE.mp4' },
-  { name: 'Valmerisse', video: '/depo/DEPOIMENTO VALMERISSE .mp4' },
 ]
 
 export default function VideoTestimonials() {
