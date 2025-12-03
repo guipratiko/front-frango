@@ -4,4 +4,24 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: '0.0.0.0',
+    port: parseInt(process.env.PORT || '3000'),
+    strictPort: false,
+    allowedHosts: [
+      'frangoweber-front-frango.o31xjg.easypanel.host',
+      '.easypanel.host',
+      'localhost',
+    ],
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: parseInt(process.env.PORT || '3000'),
+    strictPort: false,
+    allowedHosts: [
+      'frangoweber-front-frango.o31xjg.easypanel.host',
+      '.easypanel.host',
+      'localhost',
+    ],
+  },
 })
