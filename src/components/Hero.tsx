@@ -2,14 +2,14 @@ import bannerImg from '/banner.png'
 
 const stats = [
   { value: '1º curso', label: 'Frango Atropelado do Brasil' },
-  { value: '3h+', label: 'Conteúdo prático em vídeo' },
+  { value: '1h+', label: 'Conteúdo Rápido e prático' },
   { value: 'Planilha', label: 'Precificação inteligente' },
   { value: 'Suporte', label: 'Tira-dúvidas rápido' },
 ]
 
 const checklist = [
   'Técnica de desossa sem desperdício',
-  'Recheios campeões de venda',
+  'Recheios exclusivos e saborosos',
   'Amarração segura e bonita',
   'Truques de forno para dourar por igual',
 ]
@@ -124,8 +124,8 @@ export default function Hero() {
             <span>Frango Atropelado Mais Vendido e Lucrativo do Brasil</span>
           </h1>
           <p className="hero__lead">
-            O método simples que transforma um frango de <strong>R$15</strong> em uma
-            máquina de lucro de <strong>R$45 a R$75</strong>. Validado por centenas de
+            O método simples que transforma um frango de <strong>R$11,99/kg</strong> em uma
+            máquina de lucro de <strong>R$39,99/kg</strong>. Validado por centenas de
             empreendedores!
           </p>
           <div className="hero__actions">

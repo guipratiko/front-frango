@@ -10,25 +10,25 @@ export default function ValueGrid() {
       id: '02',
       title: 'Receita Rápida e Simples',
       description:
-        'O preparo é incrivelmente fácil e otimizado para produção em escala. Menos tempo na cozinha, mais tempo vendendo!',
+        'O preparo é incrivelmente fácil e otimizado para produção em escala.',
     },
     {
       id: '03',
       title: 'Baixo Custo de Implementação',
       description:
-        'Você usa equipamentos que já tem. O investimento é mínimo, o retorno é gigante.',
+        'Da para fazer com equipamentos mais simples e também industriais',
     },
     {
       id: '04',
       title: 'Alta Aceitação e Demanda Imediata',
       description:
-        'É o tempero, é a crocância, é a suculência! O público ama o Frango Atropelado.',
+        'É o tempero, é a crocância, é a suculência! Seu público vai amar o frango atropelado',
     },
     {
       id: '05',
       title: 'Método Validado e Comprovado',
       description:
-        'Chega de tentativa e erro. A fórmula secreta que já gerou milhões em vendas.',
+        'Receita que já gerou toneladas de vendas',
     },
     {
       id: '06',

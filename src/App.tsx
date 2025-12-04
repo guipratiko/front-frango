@@ -6,7 +6,7 @@ import Plans from './components/Plans'
 import VideoTestimonials from './components/VideoTestimonials'
 import Testimonials from './components/Testimonials'
 import Faq from './components/Faq'
-import FloatingCTA from './components/FloatingCTA'
+import CouponTimer from './components/CouponTimer'
 import SocialProofPopups from './components/SocialProofPopups'
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
         Atropelado de Sucesso
       </footer>
 
-      <FloatingCTA />
+      <CouponTimer />
       <SocialProofPopups />
     </div>
   )

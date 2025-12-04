@@ -1,24 +1,29 @@
 export default function Steps() {
   const steps = [
     {
-      title: 'O Segredo da Desossa',
+      title: '1- Segredo da desossa',
       description:
-        'Aprenda o corte "atropelado" em segundos, otimizando o cozimento e a apresentação.',
+        'Aprenda a desossar, com todos os detalhes que precisa saber, vídeo aula com alta definição para você não perder nenhum detalhe',
     },
     {
-      title: 'O Tempero Mágico',
+      title: '2- Segredo dos ingredientes',
       description:
-        'A fórmula exclusiva de especiarias que é a alma do negócio e faz o cliente voltar.',
+        'Veja quais ingredientes usar, como prepará-los e um bônus com sugestões extras de ingredientes',
     },
     {
-      title: 'O Ponto da Crocância',
+      title: '3- O cuidados com o recheamento',
       description:
-        'A técnica exata para um frango suculento por dentro e irresistivelmente crocante por fora.',
+        'Aprenda os cuidados e detalhes que fazem a diferença em uma amarração firme e que vai trazer uma boa estética ao seu produto.',
     },
     {
-      title: 'Estratégia de Vendas e Precificação',
+      title: '4- Assamento',
       description:
-        'Saiba como calcular seu custo e vender com a margem de lucro máxima.',
+        'Aprenda tudo que precisa para o produto ficar na suculência perfeita por dentro e crocancia irresistível por fora',
+    },
+    {
+      title: '5- Precificação',
+      description:
+        'Com uma planilha disponível no plano profissional, você consegue calcular o custo exato do seu produto, garantindo lucro na sua operação!',
     },
   ]
 
@@ -27,19 +32,16 @@ export default function Steps() {
       <div className="section-header">
         <p className="section-tag">Como funciona</p>
         <h2 className="section-title">
-          🎯 Da Cozinha ao Lucro: Como o Método "Frango Atropelado" Funciona
+          🎯 Da Produção ao Lucro: Como o Método "Frango Atropelado" Funciona
         </h2>
         <p className="section-description">
-          Neste curso, você não vai apenas aprender uma receita. Você vai dominar um
-          Processo de Produção completo, desde a escolha da matéria-prima até a embalagem
-          que vende. Mostraremos os segredos do tempero, o corte estratégico e o ponto de
-          cocção que garantem o sucesso de vendas.
+          Neste curso, você não vai apenas aprender uma receita. Você vai dominar um Processo de Produção completo, desde a escolha dos ingredientes até o produto pronto para consumo! Mostramos segredo dos temperos e dicas estratégicas
         </p>
       </div>
 
       <div className="section-header">
         <h3 className="section-title" style={{ fontSize: '1.8rem', marginTop: '2rem' }}>
-          Como Funciona em 4 Passos Simples:
+          Como Funciona em 5 Passos Simples:
         </h3>
       </div>
 
