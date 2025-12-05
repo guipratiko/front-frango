@@ -13,17 +13,17 @@ export default function Faq() {
     {
       question: 'Como terei acesso ao conteúdo?',
       answer:
-        'A compra é realizada por meio de um link da plataforma Hotmart. Após a confirmação do pagamento, o acesso ao curso é liberado online, e a planilha pode ser baixada para uso imediato. Dessa forma, você pode assistir as aulas e utilizar a planilha pelo computador, tablet ou celular.',
+        'A compra é realizada por meio de um link da plataforma Hotmart. Após a confirmação do pagamento, o acesso ao curso é liberado online, as aulas podem ser assistidas quando quiser, no seu tempo e as planilhas de custo e ingredientes de recheios baixadas para seu celular/computador',
     },
     {
       question: 'Quanto tempo dura o acesso ao curso/arquivo?',
       answer:
-        'O acesso é vitalício. Ao adquirir o produto, você garante o curso, a planilha e as aulas extras para sempre, sem mensalidades ou renovações.',
+        'Plano básico 27 min e profissional 1hora',
     },
     {
       question: 'Quanto tempo dura o curso e terei acesso por quanto tempo?',
       answer:
-        'As aulas já estão gravadas e você pode assistir no seu ritmo. O acesso é vitalício (para sempre)!',
+        'Plano básico 27 min e profissional 1hora',
     },
   ]
 

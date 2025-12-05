@@ -111,8 +111,22 @@ export default function Hero() {
 
   return (
     <header className="hero" id="inicio">
+      <div className="hero__pre-banner">
+        <h2 className="hero__pre-title">
+          O Frango Desossado e Recheado Que Nos Fez Vender 3 Toneladas em Uma Semana — Agora Você Pode Aprender!
+        </h2>
+      </div>
       <div className="hero__banner-wrapper">
         <img src={bannerImg} alt="Frango Atropelado" className="hero__banner" />
+      </div>
+      <div className="hero__post-banner">
+        <button
+          className="btn btn--primary hero__cta-banner"
+          onClick={handleCTAClick}
+        >
+          QUERO GARANTIR MINHA VAGA AGORA
+          <ArrowIcon />
+        </button>
       </div>
       <div className="hero__grid">
         <div className="hero__content">

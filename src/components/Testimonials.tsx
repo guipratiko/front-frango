@@ -15,7 +15,7 @@ const testimonials = [
     text:
       'A planilha de precificação abriu meus olhos. Hoje sei exatamente quanto cobrar sem perder dinheiro.',
     author: 'Patrícia Alves',
-    detail: 'Rotisseria Prátiko',
+    detail: 'Empresario no ramo do frango assado',
   },
 ]
 

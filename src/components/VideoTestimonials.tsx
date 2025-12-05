@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 const testimonials = [
   { name: 'Depoimento 1', videoId: 'CCVlAbIU-Po' },
@@ -14,9 +14,77 @@ const testimonials = [
 
 export default function VideoTestimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeft, setScrollLeft] = useState(0)
 
   const origin =
     typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''
+
+  // Drag handlers para mouse
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX - containerRef.current.offsetLeft)
+    setScrollLeft(containerRef.current.scrollLeft)
+    if (containerRef.current) {
+      containerRef.current.style.animationPlayState = 'paused'
+      containerRef.current.style.webkitAnimationPlayState = 'paused'
+    }
+  }
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !containerRef.current) return
+    e.preventDefault()
+    const x = e.pageX - containerRef.current.offsetLeft
+    const walk = (x - startX) * 2
+    containerRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+    // Retomar animação após um delay
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.style.animationPlayState = 'running'
+        containerRef.current.style.webkitAnimationPlayState = 'running'
+      }
+    }, 2000)
+  }
+
+  const handleContainerMouseLeave = () => {
+    setIsDragging(false)
+  }
+
+  // Touch handlers para mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return
+    setIsDragging(true)
+    setStartX(e.touches[0].pageX - containerRef.current.offsetLeft)
+    setScrollLeft(containerRef.current.scrollLeft)
+    if (containerRef.current) {
+      containerRef.current.style.animationPlayState = 'paused'
+      containerRef.current.style.webkitAnimationPlayState = 'paused'
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDragging || !containerRef.current) return
+    const x = e.touches[0].pageX - containerRef.current.offsetLeft
+    const walk = (x - startX) * 2
+    containerRef.current.scrollLeft = scrollLeft - walk
+  }
+
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.style.animationPlayState = 'running'
+        containerRef.current.style.webkitAnimationPlayState = 'running'
+      }
+    }, 2000)
+  }
 
   const sendPlayerCommand = (
     iframe: HTMLIFrameElement,
@@ -69,14 +137,22 @@ export default function VideoTestimonials() {
         <p className="section-tag">Quem compra, aprova</p>
         <h2 className="section-title">Veja o que nossos alunos estão falando</h2>
         <p className="section-description">
-          Depoimentos reais de quem já transformou o frango atropelado em fonte de renda
+          Depoimentos reais de pessoas que já comeram o produto
         </p>
       </div>
 
-      <div className="video-testimonials-wrapper">
+      <div className="video-testimonials-wrapper" ref={wrapperRef}>
         <div
           className="video-testimonials-container"
           ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleContainerMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{ cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none' }}
         >
           {/* Primeira cópia dos vídeos */}
           <div className="video-testimonials-track">
