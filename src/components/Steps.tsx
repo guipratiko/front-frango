@@ -1,27 +1,27 @@
 export default function Steps() {
   const steps = [
     {
-      title: '1- Segredo da desossa',
+      title: 'Segredo da desossa',
       description:
-        'Aprenda a desossar, com todos os detalhes que precisa saber, vídeo aula com alta definição para você não perder nenhum detalhe',
+        'Aprenda a desossar, com todos os detalhes que precisa saber, vídeo aula em alta definição para você não perder nenhum detalhe',
     },
     {
-      title: '2- Segredo dos ingredientes',
+      title: 'Segredo dos ingredientes',
       description:
         'Veja quais ingredientes usar, como prepará-los e um bônus com sugestões extras de ingredientes',
     },
     {
-      title: '3- O cuidados com o recheamento',
+      title: 'Os cuidados com o recheamento',
       description:
         'Aprenda os cuidados e detalhes que fazem a diferença em uma amarração firme e que vai trazer uma boa estética ao seu produto.',
     },
     {
-      title: '4- Assamento',
+      title: 'Assamento',
       description:
-        'Aprenda tudo que precisa para o produto ficar na suculência perfeita por dentro e crocancia irresistível por fora',
+        'Aprenda tudo que precisa para o produto ficar na suculência perfeita por dentro e crocância irresistível por fora',
     },
     {
-      title: '5- Precificação',
+      title: 'Precificação',
       description:
         'Com uma planilha disponível no plano profissional, você consegue calcular o custo exato do seu produto, garantindo lucro na sua operação!',
     },

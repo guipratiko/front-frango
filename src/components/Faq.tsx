@@ -8,17 +8,12 @@ export default function Faq() {
     {
       question: 'Funciona para quem já tem açougue/supermercado?',
       answer:
-        'Com certeza. É uma forma de aumentar o ticket médio, atrair novos clientes e diferenciar-se da concorrência.',
+        'Com certeza. É uma forma de aumentar o ticket médio, atrair novos clientes e se diferenciar da concorrência.',
     },
     {
       question: 'Como terei acesso ao conteúdo?',
       answer:
         'A compra é realizada por meio de um link da plataforma Hotmart. Após a confirmação do pagamento, o acesso ao curso é liberado online, as aulas podem ser assistidas quando quiser, no seu tempo e as planilhas de custo e ingredientes de recheios baixadas para seu celular/computador',
-    },
-    {
-      question: 'Quanto tempo dura o acesso ao curso/arquivo?',
-      answer:
-        'Plano básico 27 min e profissional 1hora',
     },
     {
       question: 'Quanto tempo dura o curso e terei acesso por quanto tempo?',

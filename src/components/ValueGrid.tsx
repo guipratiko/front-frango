@@ -22,7 +22,7 @@ export default function ValueGrid() {
       id: '04',
       title: 'Alta Aceitação e Demanda Imediata',
       description:
-        'É o tempero, é a crocância, é a suculência! Seu público vai amar o frango atropelado',
+        'É o tempero, é a crocância, e a suculência! Seu público vai amar o frango atropelado',
     },
     {
       id: '05',

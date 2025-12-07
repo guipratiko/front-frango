@@ -46,8 +46,7 @@ export default function Plans() {
             <h3 className="plan-title">Plano Profissional</h3>
           </div>
           <p className="plan-description">
-            Perfeito pra quem quer transformar a receita em renda extra ou um
-            negócio e lucrar muito nesse fim de ano!
+            Perfeito pra quem quer transformar a receita em renda extra ou um negócio e lucrar muito nesse fim de ano!
           </p>
           <div className="plan-features">
             <p className="plan-features-title">Inclui tudo do plano básico, mais:</p>

@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 
 export default function CouponTimer() {
   const [timeLeft, setTimeLeft] = useState({
-    hours: 23,
-    minutes: 59,
-    seconds: 59,
+    hours: 0,
+    minutes: 5,
+    seconds: 0,
   })
 
   useEffect(() => {
@@ -15,15 +15,19 @@ export default function CouponTimer() {
         if (seconds > 0) {
           seconds--
         } else {
-          seconds = 59
           if (minutes > 0) {
             minutes--
+            seconds = 59
           } else {
-            minutes = 59
             if (hours > 0) {
               hours--
+              minutes = 59
+              seconds = 59
             } else {
-              hours = 23
+              // Reinicia para 5 minutos quando chegar a zero
+              hours = 0
+              minutes = 5
+              seconds = 0
             }
           }
         }
@@ -70,11 +74,11 @@ export default function CouponTimer() {
     <button
       className="btn btn--primary coupon-timer"
       onClick={handleClick}
-      aria-label="Cupom ATROPELADO 10 - Use o cupom com desconto"
+      aria-label="Cupom ATRROPELADO10 - Use o cupom com desconto"
     >
       <div className="coupon-timer__code">
         <span className="coupon-timer__label">Cupom:</span>
-        <span className="coupon-timer__code-text">ATROPELADO 10</span>
+        <span className="coupon-timer__code-text">ATRROPELADO10</span>
       </div>
       <div className="coupon-timer__countdown">
         <span className="coupon-timer__countdown-label">Expira em:</span>
