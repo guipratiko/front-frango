@@ -14,213 +14,253 @@ const testimonials = [
 
 export default function VideoTestimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const videoRefs = useRef<Map<number, HTMLIFrameElement>>(new Map())
   const [isDragging, setIsDragging] = useState(false)
-  const [startX, setStartX] = useState(0)
-  const [scrollLeft, setScrollLeft] = useState(0)
+  const dragStartRef = useRef({ x: 0, y: 0, time: 0, moved: false })
+  const dragStateRef = useRef({ startX: 0, scrollLeft: 0 })
+  const [mutedVideos, setMutedVideos] = useState<Set<number>>(
+    new Set(testimonials.map((_, i) => i))
+  )
 
   const origin =
     typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''
 
-  // Drag handlers para mouse
+  // Função melhorada para enviar comandos ao player do YouTube com retry
+  const sendPlayerCommand = (
+    iframe: HTMLIFrameElement,
+    command: 'unMute' | 'mute' | 'playVideo',
+    retries = 3
+  ): Promise<void> => {
+    return new Promise((resolve) => {
+      if (!iframe || !iframe.contentWindow) {
+        resolve()
+        return
+      }
+
+      const sendMessage = (attempt: number) => {
+        try {
+          iframe.contentWindow?.postMessage(
+            JSON.stringify({
+              event: 'command',
+              func: command,
+              args: [],
+            }),
+            '*'
+          )
+
+          // Aguardar um pouco antes de considerar sucesso
+          setTimeout(() => {
+            if (attempt < retries) {
+              sendMessage(attempt + 1)
+            }
+            resolve()
+          }, 100)
+        } catch (error) {
+          if (attempt < retries) {
+            setTimeout(() => sendMessage(attempt + 1), 200)
+          } else {
+            resolve()
+          }
+        }
+      }
+
+      sendMessage(1)
+    })
+  }
+
+  // Handler melhorado de clique no vídeo
+  const handleVideoClick = async (e: React.MouseEvent<HTMLDivElement>, index: number) => {
+    // Verificar se foi um drag (movimento > 5px ou tempo > 200ms)
+    const { x, y, time, moved } = dragStartRef.current
+    const now = Date.now()
+    const timeDiff = now - time
+    const distance = Math.sqrt(
+      Math.pow(e.clientX - x, 2) + Math.pow(e.clientY - y, 2)
+    )
+
+    if (moved || distance > 5 || timeDiff > 200) {
+      return
+    }
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    const iframe = videoRefs.current.get(index)
+    if (!iframe) return
+
+    const isMuted = mutedVideos.has(index)
+
+    if (isMuted) {
+      // Desmutar e tocar
+      await sendPlayerCommand(iframe, 'unMute')
+      await sendPlayerCommand(iframe, 'playVideo')
+      setMutedVideos(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(index)
+        return newSet
+      })
+    } else {
+      // Mutar
+      await sendPlayerCommand(iframe, 'mute')
+      setMutedVideos(prev => new Set(prev).add(index))
+    }
+  }
+
+  // Mouse handlers melhorados
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return
     setIsDragging(true)
-    setStartX(e.pageX - containerRef.current.offsetLeft)
-    setScrollLeft(containerRef.current.scrollLeft)
-    if (containerRef.current) {
-      containerRef.current.style.animationPlayState = 'paused'
-      containerRef.current.style.webkitAnimationPlayState = 'paused'
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      time: Date.now(),
+      moved: false,
     }
+    dragStateRef.current = {
+      startX: e.pageX - containerRef.current.offsetLeft,
+      scrollLeft: containerRef.current.scrollLeft,
+    }
+    containerRef.current.style.cursor = 'grabbing'
   }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging || !containerRef.current) return
     e.preventDefault()
+    
+    const distance = Math.sqrt(
+      Math.pow(e.clientX - dragStartRef.current.x, 2) +
+      Math.pow(e.clientY - dragStartRef.current.y, 2)
+    )
+    
+    if (distance > 3) {
+      dragStartRef.current.moved = true
+    }
+
     const x = e.pageX - containerRef.current.offsetLeft
-    const walk = (x - startX) * 2
-    containerRef.current.scrollLeft = scrollLeft - walk
+    const walk = (x - dragStateRef.current.startX) * 2
+    containerRef.current.scrollLeft = dragStateRef.current.scrollLeft - walk
   }
 
   const handleMouseUp = () => {
     setIsDragging(false)
-    // Retomar animação após um delay
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'grab'
+    }
+    // Resetar após um delay
     setTimeout(() => {
-      if (containerRef.current) {
-        containerRef.current.style.animationPlayState = 'running'
-        containerRef.current.style.webkitAnimationPlayState = 'running'
-      }
-    }, 2000)
+      dragStartRef.current = { x: 0, y: 0, time: 0, moved: false }
+    }, 150)
   }
 
-  const handleContainerMouseLeave = () => {
+  const handleMouseLeave = () => {
     setIsDragging(false)
+    if (containerRef.current) {
+      containerRef.current.style.cursor = 'grab'
+    }
   }
 
-  // Touch handlers para mobile
+  // Touch handlers melhorados
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!containerRef.current) return
     setIsDragging(true)
-    setStartX(e.touches[0].pageX - containerRef.current.offsetLeft)
-    setScrollLeft(containerRef.current.scrollLeft)
-    if (containerRef.current) {
-      containerRef.current.style.animationPlayState = 'paused'
-      containerRef.current.style.webkitAnimationPlayState = 'paused'
+    const touch = e.touches[0]
+    dragStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      time: Date.now(),
+      moved: false,
+    }
+    dragStateRef.current = {
+      startX: touch.pageX - containerRef.current.offsetLeft,
+      scrollLeft: containerRef.current.scrollLeft,
     }
   }
 
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!isDragging || !containerRef.current) return
-    const x = e.touches[0].pageX - containerRef.current.offsetLeft
-    const walk = (x - startX) * 2
-    containerRef.current.scrollLeft = scrollLeft - walk
+    const touch = e.touches[0]
+    
+    const distance = Math.sqrt(
+      Math.pow(touch.clientX - dragStartRef.current.x, 2) +
+      Math.pow(touch.clientY - dragStartRef.current.y, 2)
+    )
+    
+    if (distance > 3) {
+      dragStartRef.current.moved = true
+    }
+
+    const x = touch.pageX - containerRef.current.offsetLeft
+    const walk = (x - dragStateRef.current.startX) * 2
+    containerRef.current.scrollLeft = dragStateRef.current.scrollLeft - walk
   }
 
   const handleTouchEnd = () => {
     setIsDragging(false)
     setTimeout(() => {
-      if (containerRef.current) {
-        containerRef.current.style.animationPlayState = 'running'
-        containerRef.current.style.webkitAnimationPlayState = 'running'
-      }
-    }, 2000)
-  }
-
-  const sendPlayerCommand = (
-    iframe: HTMLIFrameElement,
-    command: 'unMute' | 'mute' | 'playVideo'
-  ) => {
-    iframe.contentWindow?.postMessage(
-      JSON.stringify({
-        event: 'command',
-        func: command,
-        args: [],
-      }),
-      '*'
-    )
-  }
-
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    const iframe = e.currentTarget.querySelector('iframe')
-    if (iframe && iframe.contentWindow) {
-      sendPlayerCommand(iframe, 'playVideo')
-      sendPlayerCommand(iframe, 'unMute')
-    }
-    if (containerRef.current) {
-      containerRef.current.style.animationPlayState = 'paused'
-      containerRef.current.style.webkitAnimationPlayState = 'paused'
-    }
-  }
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    const iframe = e.currentTarget.querySelector('iframe')
-    if (iframe && iframe.contentWindow) {
-      sendPlayerCommand(iframe, 'mute')
-    }
-    if (containerRef.current) {
-      containerRef.current.style.animationPlayState = 'running'
-      containerRef.current.style.webkitAnimationPlayState = 'running'
-    }
-  }
-
-  const handleActivate = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
-    const iframe = e.currentTarget.querySelector('iframe')
-    if (iframe && iframe.contentWindow) {
-      sendPlayerCommand(iframe, 'playVideo')
-      sendPlayerCommand(iframe, 'unMute')
-    }
+      dragStartRef.current = { x: 0, y: 0, time: 0, moved: false }
+    }, 150)
   }
 
   return (
     <section className="section" id="depoimentos-video">
       <div className="section-header">
         <p className="section-tag">Quem compra, aprova</p>
-        <h2 className="section-title">Veja o que nossos alunos estão falando</h2>
-        <p className="section-description">
-          Depoimentos reais de pessoas que já comeram o produto
-        </p>
+        <h2 className="section-title">Depoimentos reais de pessoas que já comeram o produto</h2>
       </div>
 
-      <div className="video-testimonials-wrapper" ref={wrapperRef}>
+      <div className="video-testimonials-carousel-wrapper">
         <div
-          className="video-testimonials-container"
+          className="video-testimonials-carousel"
           ref={containerRef}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleContainerMouseLeave}
+          onMouseLeave={handleMouseLeave}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          style={{ cursor: isDragging ? 'grabbing' : 'grab', userSelect: 'none' }}
         >
-          {/* Primeira cópia dos vídeos */}
-          <div className="video-testimonials-track">
-            {testimonials.map((testimonial, index) => {
-              const iframeId = `testimonial-first-${index}`
-              const src = `https://www.youtube.com/embed/${testimonial.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${testimonial.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1${
-                origin ? `&origin=${origin}` : ''
-              }`
+          {testimonials.map((testimonial, index) => {
+            const src = `https://www.youtube.com/embed/${testimonial.videoId}?autoplay=1&mute=1&controls=1&loop=1&playlist=${testimonial.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1${
+              origin ? `&origin=${origin}` : ''
+            }`
 
-              return (
-                <div
-                  key={`first-${index}`}
-                  className="video-testimonial-item"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onClick={handleActivate}
-                  onTouchStart={handleActivate}
-                >
-                  <iframe
-                    id={iframeId}
-                    className="video-testimonial-youtube"
-                    src={src}
-                    title={`Depoimento de ${testimonial.name}`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                  <div className="video-testimonial-overlay">
-                    <p className="video-testimonial-name">{testimonial.name}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Segunda cópia para loop infinito */}
-          <div className="video-testimonials-track" aria-hidden="true">
-            {testimonials.map((testimonial, index) => {
-              const iframeId = `testimonial-second-${index}`
-              const src = `https://www.youtube.com/embed/${testimonial.videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${testimonial.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1${
-                origin ? `&origin=${origin}` : ''
-              }`
-
-              return (
-                <div
-                  key={`second-${index}`}
-                  className="video-testimonial-item"
-                  onMouseEnter={handleMouseEnter}
-                  onMouseLeave={handleMouseLeave}
-                  onClick={handleActivate}
-                  onTouchStart={handleActivate}
-                >
-                  <iframe
-                    id={iframeId}
-                    className="video-testimonial-youtube"
-                    src={src}
-                    title={`Depoimento de ${testimonial.name}`}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                  <div className="video-testimonial-overlay">
-                    <p className="video-testimonial-name">{testimonial.name}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+            return (
+              <div 
+                key={index} 
+                className="presto-iframe-fallback-container"
+                onClick={(e) => handleVideoClick(e, index)}
+                onMouseDown={(e) => {
+                  if (e.target === e.currentTarget || (e.target as HTMLElement).tagName === 'IFRAME') {
+                    dragStartRef.current = {
+                      x: e.clientX,
+                      y: e.clientY,
+                      time: Date.now(),
+                      moved: false,
+                    }
+                  }
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                <iframe
+                  ref={(el) => {
+                    if (el) {
+                      videoRefs.current.set(index, el)
+                    }
+                  }}
+                  id={`video-testimonial-${index}`}
+                  className="presto-fallback-iframe"
+                  data-src={src}
+                  src={src}
+                  title={`Depoimento de ${testimonial.name}`}
+                  allowFullScreen
+                  allowTransparency
+                  allow="autoplay"
+                  frameBorder="0"
+                />
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>
