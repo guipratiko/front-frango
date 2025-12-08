@@ -15,7 +15,7 @@ const testimonials = [
 export default function VideoTestimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRefs = useRef<Map<number, HTMLIFrameElement>>(new Map())
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const dragStartRef = useRef({ x: 0, y: 0, time: 0, moved: false })
   const dragStateRef = useRef({ startX: 0, scrollLeft: 0 })
@@ -50,7 +50,8 @@ export default function VideoTestimonials() {
 
     // Só centralizar se o vídeo estiver significativamente fora do centro (mais de 50px)
     if (closestVideo && closestDistance > 50) {
-      const videoOffsetLeft = closestVideo.offsetLeft
+      const videoElement = closestVideo as HTMLElement
+      const videoOffsetLeft = videoElement.offsetLeft
       const containerWidth = containerRect.width
       const videoWidth = 350 // Largura fixa do vídeo
 
