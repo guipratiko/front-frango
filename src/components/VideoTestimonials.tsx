@@ -15,7 +15,6 @@ const testimonials = [
 export default function VideoTestimonials() {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRefs = useRef<Map<number, HTMLIFrameElement>>(new Map())
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [isDragging, setIsDragging] = useState(false)
   const dragStartRef = useRef({ x: 0, y: 0, time: 0, moved: false })
   const dragStateRef = useRef({ startX: 0, scrollLeft: 0 })
@@ -25,45 +24,6 @@ export default function VideoTestimonials() {
 
   const origin =
     typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : ''
-
-  // Função para centralizar o vídeo mais próximo (só se estiver longe do centro)
-  const snapToNearestVideo = () => {
-    if (!containerRef.current) return
-
-    const container = containerRef.current
-    const containerRect = container.getBoundingClientRect()
-    const containerCenter = containerRect.left + containerRect.width / 2
-
-    let closestVideo: HTMLElement | null = null
-    let closestDistance = Infinity
-
-    container.querySelectorAll('.presto-iframe-fallback-container').forEach((video) => {
-      const videoRect = video.getBoundingClientRect()
-      const videoCenter = videoRect.left + videoRect.width / 2
-      const distance = Math.abs(containerCenter - videoCenter)
-
-      if (distance < closestDistance) {
-        closestDistance = distance
-        closestVideo = video as HTMLElement
-      }
-    })
-
-    // Só centralizar se o vídeo estiver significativamente fora do centro (mais de 50px)
-    if (closestVideo && closestDistance > 50) {
-      const videoElement = closestVideo as HTMLElement
-      const videoOffsetLeft = videoElement.offsetLeft
-      const containerWidth = containerRect.width
-      const videoWidth = 350 // Largura fixa do vídeo
-
-      // Calcular a posição para centralizar o vídeo
-      const targetScroll = videoOffsetLeft - (containerWidth / 2) + (videoWidth / 2)
-
-      container.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth',
-      })
-    }
-  }
 
   // Função melhorada para enviar comandos ao player do YouTube com retry
   const sendPlayerCommand = (
@@ -186,13 +146,10 @@ export default function VideoTestimonials() {
     if (containerRef.current) {
       containerRef.current.style.cursor = 'grab'
     }
-    // Centralizar vídeo após soltar (com delay maior para não interferir no scroll)
+    // Resetar após um delay
     setTimeout(() => {
-      if (!isDragging) {
-        snapToNearestVideo()
-      }
       dragStartRef.current = { x: 0, y: 0, time: 0, moved: false }
-    }, 300)
+    }, 150)
   }
 
   const handleMouseLeave = () => {
@@ -239,35 +196,19 @@ export default function VideoTestimonials() {
 
   const handleTouchEnd = () => {
     setIsDragging(false)
-    // Centralizar vídeo após soltar (com delay maior para não interferir no scroll)
     setTimeout(() => {
-      if (!isDragging) {
-        snapToNearestVideo()
-      }
       dragStartRef.current = { x: 0, y: 0, time: 0, moved: false }
-    }, 300)
-  }
-
-  // Handler para scroll nativo (mouse wheel, etc) - só centraliza quando scroll para completamente
-  const handleScroll = () => {
-    if (isDragging) return
-    
-    // Limpar timeout anterior
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current)
-    }
-    
-    // Só centralizar após o scroll parar completamente (500ms sem movimento)
-    scrollTimeoutRef.current = setTimeout(() => {
-      snapToNearestVideo()
-    }, 500)
+    }, 150)
   }
 
   return (
     <section className="section" id="depoimentos-video">
       <div className="section-header">
         <p className="section-tag">Quem compra, aprova</p>
-        <h2 className="section-title">Depoimentos reais de pessoas que já comeram o produto</h2>
+        <h2 className="section-title">Veja o que nossos alunos estão falando</h2>
+        <p className="section-description">
+          Depoimentos reais de pessoas que já comeram o produto
+        </p>
       </div>
 
       <div className="video-testimonials-carousel-wrapper">
@@ -281,7 +222,6 @@ export default function VideoTestimonials() {
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          onScroll={handleScroll}
         >
           {testimonials.map((testimonial, index) => {
             const src = `https://www.youtube.com/embed/${testimonial.videoId}?autoplay=1&mute=1&controls=1&loop=1&playlist=${testimonial.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1${

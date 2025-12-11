@@ -74,14 +74,14 @@ export default function CouponTimer() {
     <button
       className="btn btn--primary coupon-timer"
       onClick={handleClick}
-      aria-label="Cupom ATROPELADO10 - Use o cupom com desconto"
+      aria-label="Cupom ATRROPELADO10 - Use o cupom com desconto"
     >
       <div className="coupon-timer__message">
-        Uso o cupom a baixo para ganhar 10% de desconto. Limitadíssimo!!
+        Use o cupom a baixo para ganhar 10% de desconto. Limitadíssimo!!
       </div>
       <div className="coupon-timer__code">
         <span className="coupon-timer__label">Cupom:</span>
-        <span className="coupon-timer__code-text">ATROPELADO10</span>
+        <span className="coupon-timer__code-text">ATRROPELADO10</span>
       </div>
       <div className="coupon-timer__countdown">
         <span className="coupon-timer__countdown-label">Expira em:</span>

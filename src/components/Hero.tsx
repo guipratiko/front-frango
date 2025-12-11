@@ -131,7 +131,7 @@ export default function Hero() {
       <div className="hero__grid">
         <div className="hero__content">
           <div className="hero__badge badge badge--accent">
-            Oferta Relâmpago • Válida por tempo limitado • Cupom ATROPELADO10 dá 10% de desconto
+            Oferta Relâmpago • Válida por tempo limitado • Cupom ATRROPELADO10 dá 10% de desconto
           </div>
           <h1 className="hero__title">
             PARE DE VENDER FRANGO COMUM: Aprenda a Produzir o{' '}
