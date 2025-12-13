@@ -419,6 +419,8 @@
   object-fit: cover;
   display: block;
   border: none;
+  transform: scale(1.25) translateY(-10%);
+  transform-origin: center center;
 }
 
 .video-fallback {
